@@ -1,5 +1,4 @@
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 // Tiny stack VM for tiny-stack-vm-01: runs each bytecode program and writes
 // exactly the bytes it writes plus its exit code. ISA.md in the kit is the
@@ -168,8 +167,8 @@ function run(p: Uint8Array, inp: Uint8Array): { o: number[]; c: number } {
 const I = process.env.MAKEFUN_INPUT_DIR ?? '/input';
 const O = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 for (const id of readdirSync(I).sort()) {
-  const r = run(new Uint8Array(readFileSync(join(I, id, 'program.bin'))), new Uint8Array(readFileSync(join(I, id, 'input.bin'))));
-  mkdirSync(join(O, id), { recursive: true });
-  writeFileSync(join(O, id, 'stdout.bin'), Uint8Array.from(r.o));
-  writeFileSync(join(O, id, 'exit.txt'), `${r.c}\n`);
+  const r = run(new Uint8Array(readFileSync(`${I}/${id}/program.bin`)), new Uint8Array(readFileSync(`${I}/${id}/input.bin`)));
+  mkdirSync(`${O}/${id}`, { recursive: true });
+  writeFileSync(`${O}/${id}/stdout.bin`, Uint8Array.from(r.o));
+  writeFileSync(`${O}/${id}/exit.txt`, `${r.c}\n`);
 }
